@@ -119,6 +119,7 @@ struct spdk_net_impl {
 
 	int (*get_opts)(struct spdk_sock_impl_opts *opts, size_t *len);
 	int (*set_opts)(const struct spdk_sock_impl_opts *opts, size_t len);
+	int (*get_fd)(struct spdk_sock *sock);
 
 	STAILQ_ENTRY(spdk_net_impl) link;
 };
@@ -386,6 +387,8 @@ spdk_sock_get_placement_id(int fd, enum spdk_placement_mode mode, int *placement
 		break;
 	}
 }
+
+int spdk_get_sock_fd(struct spdk_sock *sock);
 
 /**
  * Converts ip and port into address.
