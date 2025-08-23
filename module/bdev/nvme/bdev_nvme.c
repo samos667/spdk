@@ -3798,13 +3798,13 @@ bdev_nvme_create_poll_group_cb(void *io_device, void *ctx_buf)
 	}
 
 	period = spdk_interrupt_mode_is_enabled() ? 0 : g_opts.nvme_ioq_poll_period_us;
-	if (spdk_interrupt_mode_is_enabled() && (g_nvme_trtype == SPDK_NVME_TRANSPORT_TCP)) {
+	if (spdk_interrupt_mode_is_enabled()) {
 		/* For TCP transport in interrupt mode, the IO queue must be polled periodically
 		 * to flush data. Since TCP transport does not automatically push data to
 		 * the OS stack, we poll periodically to ensure timely processing of IO
 		 * commands.
 		 */
-		period = 100;
+		period = 200;
 	}
 	group->poller = SPDK_POLLER_REGISTER(bdev_nvme_poll, group, period);
 
@@ -6739,12 +6739,12 @@ spdk_bdev_nvme_create(struct spdk_nvme_transport_id *trid,
 			    "already exists.\n", trid->traddr, drv_opts->hostnqn);
 		return -EEXIST;
 	}
-
 	if (g_nvme_trtype == SPDK_NVME_TRANSPORT_CUSTOM) {
 		g_nvme_trtype = trid->trtype;
+    printf("g_nvme_trtype a");
 	} else if (g_nvme_trtype != trid->trtype) {
-		SPDK_ERRLOG("NVMe transport type %s is not supported.\n",
-			    spdk_nvme_transport_id_trtype_str(trid->trtype));
+    printf("g_nvme_trtype b");
+		g_nvme_trtype = trid->trtype;
 		return -ENOTSUP;
 	}
 
